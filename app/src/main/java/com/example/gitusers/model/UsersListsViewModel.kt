@@ -1,27 +1,29 @@
 package com.example.gitusers.model
 
-import android.app.Application
-import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.cachedIn
-import com.example.gitusers.common.Resource
-import com.example.gitusers.common.connect.InternetConnection
-import com.example.gitusers.data.local.LocalOwner
+import androidx.paging.map
+import com.example.gitusers.data.local.LocalUser
+import com.example.gitusers.data.local.toUserDisplay
+import com.example.gitusers.data.remote.Users
+import com.example.gitusers.data.remote.toLocalOwner
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class UsersListsViewModel @Inject constructor(
-    pager: Pager<Int, LocalOwner>
+    pager: Pager<Int, LocalUser>
 ) : ViewModel() {
+
     val usersPageFlow = pager
         .flow
+        .map {data ->
+            data.map {
+                it.toUserDisplay()
+            }
+        }
         .cachedIn(viewModelScope)
 }

@@ -1,7 +1,7 @@
-package com.example.gitusers.common.gitdata.remote
+package com.example.gitusers.common.gitdata
 
 import com.example.gitusers.common.RetrofitInstance
-import com.example.gitusers.common.gitdata.AccessToken
+import com.example.gitusers.common.gitdata.remote.AccessToken
 import retrofit2.Response
 
 class GitHubRepo {
@@ -10,6 +10,6 @@ class GitHubRepo {
         clientSecret:String,
         code:String
     ): Response<AccessToken> {
-        return RetrofitInstance.gitInstance.getAccessToken(clientId, clientSecret, code)
+        return RetrofitInstance.gitClient.getAccessToken(clientId, clientSecret, code)
     }
 }

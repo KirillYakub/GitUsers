@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,38 +29,44 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
-import com.example.gitusers.data.local.LocalOwner
+import com.example.gitusers.data.local.LocalUser
+import com.example.gitusers.data.local.UserDisplayData
 import com.example.gitusers.model.UsersListsViewModel
 
 @Composable
 fun MainPage(
     viewModel: UsersListsViewModel,
-    users: LazyPagingItems<LocalOwner>
+    users: LazyPagingItems<UserDisplayData>
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(key1 = users.loadState) {
+        if(users.loadState.refresh is LoadState.Error) {
+            Toast.makeText(
+                context,
+                "Sorry, something went wrong",
+                Toast.LENGTH_LONG
+            ).show()
+            Log.d("LAUNCHED_ERROR", (users.loadState.refresh as LoadState.Error).error.message.toString())
+        }
+    }
     Box(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
     ) {
-        val context = LocalContext.current
-        LaunchedEffect(key1 = users.loadState) {
-            if(users.loadState.refresh is LoadState.Error) {
-                Toast.makeText(
-                    context,
-                    "Sorry, something went wrong",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.d("LAUNCHED_ERROR", (users.loadState.refresh as LoadState.Error).error.message.toString())
-            }
+        if(users.loadState.refresh is LoadState.Loading) {
+            CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
         }
-        if(users.loadState.refresh is LoadState.Loading)
-            CircularProgressIndicator(strokeWidth = 2.dp)
         else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(users.itemCount) {position ->
                     Card {
@@ -71,14 +78,19 @@ fun MainPage(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             AsyncImage(
-                                model = users[position]!!.avatarUrl,
+                                model = users[position]?.avatarUrl,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(48.dp)
+                                    .size(72.dp)
                                     .clip(CircleShape),
                                 contentScale = ContentScale.Crop
                             )
-                            DisplayText(text = users[position]!!.login, 18)
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                users[position]?.login?.let { DisplayText(text = it, 24) }
+                                users[position]?.reposUrl?.let { DisplayText(text = it, size = 18) }
+                            }
                         }
                     }
                 }

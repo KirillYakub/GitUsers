@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
-data class LocalOwner(
+data class LocalUser(
     val avatarUrl: String,
     val eventsUrl: String,
     val followersUrl: String,
@@ -25,3 +25,19 @@ data class LocalOwner(
     val type: String,
     val url: String
 )
+
+data class UserDisplayData(
+    val id: Int,
+    val login: String,
+    val reposUrl: String,
+    val avatarUrl: String,
+)
+
+fun LocalUser.toUserDisplay(): UserDisplayData {
+    return UserDisplayData(
+        id = id,
+        login = login,
+        reposUrl = reposUrl,
+        avatarUrl = avatarUrl
+    )
+}
