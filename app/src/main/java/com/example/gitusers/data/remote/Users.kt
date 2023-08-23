@@ -1,9 +1,11 @@
 package com.example.gitusers.data.remote
 
-import com.example.gitusers.data.local.LocalOwner
+import com.example.gitusers.data.local.LocalUser
 import com.google.gson.annotations.SerializedName
+import dagger.Provides
+import javax.inject.Singleton
 
-data class Owner(
+data class Users(
     @SerializedName("avatar_url")
     val avatarUrl: String,
     @SerializedName("events_url")
@@ -38,8 +40,8 @@ data class Owner(
     val url: String
 )
 
-fun Owner.toLocalOwner(): LocalOwner {
-    return LocalOwner(
+fun Users.toLocalOwner(): LocalUser {
+    return LocalUser(
         avatarUrl = this.avatarUrl,
         eventsUrl = this.eventsUrl,
         followersUrl = this.followersUrl,
