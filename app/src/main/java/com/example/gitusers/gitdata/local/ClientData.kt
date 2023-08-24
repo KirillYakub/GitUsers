@@ -1,4 +1,4 @@
-package com.example.gitusers.common.gitdata
+package com.example.gitusers.gitdata.local
 
 object ClientData {
     const val clientId = "58d0ac669b3daccffb83"

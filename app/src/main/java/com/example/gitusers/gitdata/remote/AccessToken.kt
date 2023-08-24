@@ -1,4 +1,4 @@
-package com.example.gitusers.common.gitdata.remote
+package com.example.gitusers.gitdata.remote
 
 import com.google.gson.annotations.SerializedName
 

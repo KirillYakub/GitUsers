@@ -1,4 +1,4 @@
-package com.example.gitusers.common.gitdata.remote
+package com.example.gitusers.gitdata.remote
 
 import retrofit2.Response
 import retrofit2.http.Field
