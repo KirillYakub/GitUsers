@@ -1,10 +1,13 @@
-package com.example.gitusers.data.remote
+package com.example.gitusers.model
 
-import com.example.gitusers.data.local.LocalUser
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.gitusers.util.DatabaseData
 import com.google.gson.annotations.SerializedName
-import dagger.Provides
-import javax.inject.Singleton
+import kotlinx.serialization.Serializable
 
+@Serializable
+@Entity(tableName = DatabaseData.usersTable)
 data class Users(
     @SerializedName("avatar_url")
     val avatarUrl: String,
@@ -20,6 +23,7 @@ data class Users(
     val gravatarId: String,
     @SerializedName("html_url")
     val htmlUrl: String,
+    @PrimaryKey(autoGenerate = false)
     val id: Int,
     val login: String,
     @SerializedName("node_id")
@@ -39,26 +43,3 @@ data class Users(
     val type: String,
     val url: String
 )
-
-fun Users.toLocalOwner(): LocalUser {
-    return LocalUser(
-        avatarUrl = this.avatarUrl,
-        eventsUrl = this.eventsUrl,
-        followersUrl = this.followersUrl,
-        followingUrl = this.followingUrl,
-        gistsUrl = this.gistsUrl,
-        gravatarId = this.gravatarId,
-        htmlUrl = this.htmlUrl,
-        id = this.id,
-        login = this.login,
-        nodeId = this.nodeId,
-        organizationsUrl = this.organizationsUrl,
-        receivedEventsUrl = this.receivedEventsUrl,
-        reposUrl = this.reposUrl,
-        siteAdmin = this.siteAdmin,
-        starredUrl = this.starredUrl,
-        subscriptionsUrl = this.subscriptionsUrl,
-        type = this.type,
-        url = this.url
-    )
-}
