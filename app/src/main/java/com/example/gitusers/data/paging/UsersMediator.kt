@@ -7,21 +7,22 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.gitusers.data.UsersDatabase
 import com.example.gitusers.data.remote.UsersApi
-import com.example.gitusers.model.Users
+import com.example.gitusers.model.LocalUsers
 import com.example.gitusers.model.UsersRemoteKeys
+import com.example.gitusers.model.toLocalUsers
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class UsersMediator @Inject constructor(
     private val usersApi: UsersApi,
     private val usersDatabase: UsersDatabase
-): RemoteMediator<Int, Users>() {
+): RemoteMediator<Int, LocalUsers>() {
     private val usersDao = usersDatabase.usersDao()
     private val usersKeysDao = usersDatabase.usersKeysDao()
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Users>
+        state: PagingState<Int, LocalUsers>
     ): MediatorResult {
         return try {
             val currentPage = when (loadType) {
@@ -69,7 +70,7 @@ class UsersMediator @Inject constructor(
                     )
                 }
                 usersKeysDao.addAllRemoteKeys(remoteKeys = keys)
-                usersDao.addUsers(users = response)
+                usersDao.addUsers(users = response.map { it.toLocalUsers() })
             }
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: Exception) {
@@ -78,7 +79,7 @@ class UsersMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, Users>
+        state: PagingState<Int, LocalUsers>
     ): UsersRemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
@@ -88,7 +89,7 @@ class UsersMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyForFirstItem(
-        state: PagingState<Int, Users>
+        state: PagingState<Int, LocalUsers>
     ): UsersRemoteKeys? {
         return state.pages
             .firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
@@ -98,7 +99,7 @@ class UsersMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyForLastItem(
-        state: PagingState<Int, Users>
+        state: PagingState<Int, LocalUsers>
     ): UsersRemoteKeys? {
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()

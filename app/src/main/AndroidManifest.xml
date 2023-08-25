@@ -18,7 +18,7 @@
         android:theme="@style/Theme.GitUsers"
         tools:targetApi="31">
         <activity
-            android:name=".views.MainActivity"
+            android:name=".navigation.views.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.GitUsers">
             <intent-filter>

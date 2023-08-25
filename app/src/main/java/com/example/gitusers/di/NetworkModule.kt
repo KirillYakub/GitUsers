@@ -1,7 +1,6 @@
 package com.example.gitusers.di
 
 import com.example.gitusers.data.remote.UsersApi
-import com.example.gitusers.gitdata.remote.GitHubClient
 import com.example.gitusers.util.ApiName
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -46,17 +45,6 @@ object NetworkModule {
     }
     @Provides
     @Singleton
-    @Named("GitHubRetrofit")
-    fun getRetrofitGitHubInstance(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(ApiName.gitHub)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-    }
-    @Provides
-    @Singleton
-    @Named("GitHubApiRetrofit")
     fun getRetrofitGitHubApiInstance(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(ApiName.gitHubApi)
@@ -67,12 +55,7 @@ object NetworkModule {
     }
     @Provides
     @Singleton
-    fun getGitHubClient(@Named("GitHubRetrofit") retrofit: Retrofit): GitHubClient {
-        return retrofit.create(GitHubClient::class.java)
-    }
-    @Provides
-    @Singleton
-    fun getGitHubApiClient(@Named("GitHubApiRetrofit")retrofit: Retrofit): UsersApi {
+    fun getGitHubApiClient(retrofit: Retrofit): UsersApi {
         return retrofit.create(UsersApi::class.java)
     }
 }
