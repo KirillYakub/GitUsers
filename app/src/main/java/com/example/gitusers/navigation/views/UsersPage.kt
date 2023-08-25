@@ -1,8 +1,9 @@
-package com.example.gitusers.views
+package com.example.gitusers.navigation.views
 
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.example.gitusers.R
+import com.example.gitusers.model.LocalUsers
 import com.example.gitusers.model.Users
 
 @Composable
@@ -52,7 +54,7 @@ fun DisplayText(text: String, size: Int) {
 }
 
 @Composable
-fun DisplayUsers(items: LazyPagingItems<Users>) {
+fun DisplayUsers(items: LazyPagingItems<LocalUsers>, onItemClick: (user: LocalUsers) -> Unit) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +67,14 @@ fun DisplayUsers(items: LazyPagingItems<Users>) {
             count = items.itemCount,
             key = items.itemKey { it.id }
         ) {id ->
-            items[id]?.let { UsersItem(user = it) }
+            items[id]?.let {
+                UsersItem(
+                    user = it,
+                    onItemClick = {
+                        onItemClick(it)
+                    }
+                )
+            }
         }
         item {
             if(items.loadState.append is LoadState.Loading) {
@@ -80,8 +89,14 @@ fun DisplayUsers(items: LazyPagingItems<Users>) {
 }
 
 @Composable
-fun UsersItem(user: Users) {
-    Card {
+fun UsersItem(
+    user: LocalUsers,
+    onItemClick: (user: LocalUsers) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .clickable { onItemClick(user) }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

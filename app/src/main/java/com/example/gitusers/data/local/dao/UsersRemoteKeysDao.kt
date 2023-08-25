@@ -8,12 +8,12 @@ import com.example.gitusers.model.UsersRemoteKeys
 
 @Dao
 interface UsersRemoteKeysDao {
-    @Query("SELECT * FROM unsplash_keys_table WHERE id =:id")
+    @Query("SELECT * FROM users_keys_table WHERE id =:id")
     suspend fun getRemoteKeys(id: Int): UsersRemoteKeys
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAllRemoteKeys(remoteKeys: List<UsersRemoteKeys>)
 
-    @Query("DELETE FROM unsplash_keys_table")
+    @Query("DELETE FROM users_keys_table")
     suspend fun deleteAllKeys()
 }

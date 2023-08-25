@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity(tableName = DatabaseData.usersTable)
 data class Users(
     @SerializedName("avatar_url")
     val avatarUrl: String,
@@ -23,7 +22,6 @@ data class Users(
     val gravatarId: String,
     @SerializedName("html_url")
     val htmlUrl: String,
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
     val login: String,
     @SerializedName("node_id")
@@ -43,3 +41,19 @@ data class Users(
     val type: String,
     val url: String
 )
+
+@Entity(tableName = DatabaseData.usersTable)
+data class LocalUsers(
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
+    val avatarUrl: String,
+    val login: String,
+)
+
+fun Users.toLocalUsers(): LocalUsers {
+    return LocalUsers(
+        id = id,
+        avatarUrl = avatarUrl,
+        login = login
+    )
+}

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.gitusers.util.DatabaseData
 
-@Entity(tableName = DatabaseData.unsplashKeysTable)
+@Entity(tableName = DatabaseData.usersKeysTable)
 data class UsersRemoteKeys(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
