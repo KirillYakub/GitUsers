@@ -1,5 +1,6 @@
 # Used technologies
-Room
-Retrofit
-Dagger Hilt
-Coroutines
+Room,	
+Retrofit,
+Dagger Hilt,
+Coroutines,
+MVVM
